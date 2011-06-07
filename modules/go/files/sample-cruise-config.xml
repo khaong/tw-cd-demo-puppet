@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cruise xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="cruise-config.xsd" schemaVersion="35">
+  <server artifactsdir="artifacts">
+    <security allowOnlyKnownUsersToLogin="true">
+      <passwordFile path="/etc/go/go_users" />
+    </security>
+  </server>
+  <pipelines group="CDDemo">
+    <pipeline name="Sample-WebApplication">
+      <materials>
+        <git url="git://github.com/khaong/awacs.git" />
+      </materials>
+      <stage name="dependencies">
+        <jobs>
+          <job name="bundle">
+            <tasks>
+              <exec command="/var/lib/gems/1.8/bin/bundle">
+                <arg>--deployment</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="build">
+        <jobs>
+          <job name="test">
+            <tasks>
+              <rake>
+                <runif status="passed" />
+              </rake>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="ci-deploy">
+        <jobs>
+          <job name="ci-deploy">
+            <tasks>
+              <rake>
+                <runif status="passed" />
+              </rake>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="acceptance-tests">
+        <jobs>
+          <job name="run-acceptance-tests">
+            <tasks>
+              <rake>
+                <runif status="passed" />
+              </rake>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="deploy-to-qa">
+        <approval type="manual" />
+        <jobs>
+          <job name="deploy-to-qa">
+            <tasks>
+              <rake>
+                <runif status="passed" />
+              </rake>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="deploy-to-staging">
+        <approval type="manual" />
+        <jobs>
+          <job name="deploy-to-staging">
+            <tasks>
+              <rake>
+                <runif status="passed" />
+              </rake>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="deploy-to-production">
+        <approval type="manual" />
+        <jobs>
+          <job name="deploy-to-production">
+            <tasks>
+              <rake>
+                <runif status="passed" />
+              </rake>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+  </pipelines>
+</cruise>
+
