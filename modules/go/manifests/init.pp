@@ -8,7 +8,7 @@ class go {
   
   exec {"apt_update":
     command => "/usr/bin/apt-get update",
-    require => Exec["/etc/apt/sources.list.d/canonical.list"]
+    require => File["/etc/apt/sources.list.d/canonical.list"]
   }
   
   package {"sun-java6-jdk":
