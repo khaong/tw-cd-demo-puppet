@@ -11,14 +11,19 @@ class go {
     require => File["/etc/apt/sources.list.d/canonical.list"]
   }
   
-  package {"sun-java6-jre":
+  package {"sun-java6-bin":
     ensure => installed,
     require => [Exec["apt_update"], File["/etc/apt/sources.list.d/canonical.list"]],
+  }
+
+  package {"sun-java6-jre":
+    ensure => installed,
+    require => [Package["sun-java6-bin"]],
   }
     
   package {"sun-java6-jdk":
     ensure => installed,
-    require => [Exec["apt_update"], File["/etc/apt/sources.list.d/canonical.list"]],
+    require => [Package["sun-java6-jre"]],
   }
   
   package {
