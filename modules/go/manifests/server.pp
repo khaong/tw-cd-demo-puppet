@@ -17,7 +17,7 @@ class go::server {
   
   exec { "install_go_server":
     command => "/usr/bin/dpkg -i $go_server_file",
-    require => [Exec["download_cruise_server"], Package["sun-java6-jre"]]
+    require => [Exec["download_cruise_server"], Exec["install_java"]]
   }
     
   file {
