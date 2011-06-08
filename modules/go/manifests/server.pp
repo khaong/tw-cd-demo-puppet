@@ -7,7 +7,7 @@ class go::server {
   File {
     owner => go,
     group => go,
-    mode => 0440,
+    mode => 0660,
   }
   
   exec { "download_cruise_server":
