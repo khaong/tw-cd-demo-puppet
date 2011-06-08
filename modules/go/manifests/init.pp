@@ -5,4 +5,8 @@ class go {
     mode => 0600,
     source => 'puppet:///modules/go/canonical.list';
   }
+  
+  package {"sun-java6-jdk":
+    require => [Exec["apt_update"], File["/etc/apt/sources.list.d/canonical.list"]],
+  }
 }
