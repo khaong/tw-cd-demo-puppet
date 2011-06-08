@@ -1,4 +1,6 @@
 class go::server {
+  include go
+  
   $go_home = "/etc/go"
   File {
     owner => go,
