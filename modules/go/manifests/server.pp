@@ -2,11 +2,13 @@ class go::server {
   include go
   
   $go_home = "/etc/go"
+  
   File {
     owner => go,
     group => go,
     mode => 0440,
   }
+  
   file {
     "${go_home}/":
       ensure => directory;

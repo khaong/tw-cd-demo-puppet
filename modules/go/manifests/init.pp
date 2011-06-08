@@ -12,6 +12,12 @@ class go {
   }
   
   package {"sun-java6-jdk":
+    ensure => installed,
     require => [Exec["apt_update"], File["/etc/apt/sources.list.d/canonical.list"]],
+  }
+  
+  package {
+    "unzip":
+      ensure => installed,
   }
 }
