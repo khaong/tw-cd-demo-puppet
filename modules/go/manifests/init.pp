@@ -10,20 +10,14 @@ class go {
     command => "/usr/bin/apt-get update",
     require => File["/etc/apt/sources.list.d/canonical.list"]
   }
-
-  package {"sun-java6-jre":
-    ensure => installed,
-    require => [Exec["apt_update"], File["/etc/apt/sources.list.d/canonical.list"]],
+  
+  exec {"accept_sun_licence":
+    command => "/bin/echo \"sun-java6-jre shared/accepted-sun-dlj-v1-1 boolean true\" | /usr/bin/debconf-set-selections"
   }
   
-  package {"sun-java6-bin":
-    ensure => installed,
-    require => [Package["sun-java6-jre"]],
-  }
-
-  package {"sun-java6-jdk":
-    ensure => installed,
-    require => [Package["sun-java6-jre"]],
+  exec {"install_java":
+    command => "/usr/bin/apt-get install sun-java6-jre sun-java6-bin",
+    require => [Exec["apt_update"], Exec["accept_sun_licence"], File["/etc/apt/sources.list.d/canonical.list"]],
   }
   
   package {
