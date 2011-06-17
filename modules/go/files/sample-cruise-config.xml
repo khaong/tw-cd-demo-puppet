@@ -1,11 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <cruise xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="cruise-config.xsd" schemaVersion="35">
-  <server artifactsdir="artifacts">
-    <security allowOnlyKnownUsersToLogin="true">
-      <passwordFile path="/etc/go/go_users" />
-    </security>
-  </server>
   <pipelines group="CDDemo">
+    <pipeline name="rails3-devise-rspec-cucumber">
+      <materials>
+        <git url="git://github.com/khaong/rails3-devise-rspec-cucumber.git" />
+      </materials>
+      <stage name="dependencies">
+        <jobs>
+          <job name="bundle">
+            <tasks>
+              <exec command="/var/lib/gems/1.8/bin/bundle">
+                <arg>--deployment</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="database">
+        <jobs>
+          <job name="migrate">
+            <tasks>
+              <rake target="db:migrate">
+                <runif status="passed" />
+              </rake>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="tests">
+        <jobs>
+          <job name="spec">
+            <tasks>
+              <rake target="spec">
+                <runif status="passed" />
+              </rake>
+            </tasks>
+          </job>
+          <job name="features">
+            <tasks>
+              <rake target="cucumber">
+                <runif status="passed" />
+              </rake>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="package">
+        <jobs>
+          <job name="package">
+            <tasks>
+              <rake target="package">
+                <runif status="passed" />
+              </rake>
+            </tasks>
+            <artifacts>
+              <artifact src="package/*" />
+            </artifacts>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="QA">
+        <approval type="manual" />
+        <jobs>
+          <job name="deploy">
+            <tasks>
+              <rake target="deploy">
+                <runif status="passed" />
+              </rake>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="Performance">
+        <approval type="manual" />
+        <jobs>
+          <job name="Basic">
+            <tasks>
+              <rake target="performance_test">
+                <runif status="passed" />
+              </rake>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="Staging">
+        <approval type="manual" />
+        <jobs>
+          <job name="deploy">
+            <tasks>
+              <rake target="deploy">
+                <runif status="passed" />
+              </rake>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="Production">
+        <approval type="manual" />
+        <jobs>
+          <job name="deploy">
+            <tasks>
+              <rake target="deploy">
+                <runif status="passed" />
+              </rake>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
     <pipeline name="Sample-WebApplication">
       <materials>
         <git url="git://github.com/khaong/awacs.git" />
@@ -93,5 +196,8 @@
       </stage>
     </pipeline>
   </pipelines>
+  <agents>
+    <agent hostname="ip-10-68-15-179" ipaddress="10.68.15.179" uuid="8ab59101-be40-4b1d-a753-74d0afd3e914" />
+  </agents>
 </cruise>
 
