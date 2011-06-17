@@ -22,8 +22,9 @@ class go::server {
     
   file {
     "${go_home}/":
-      ensure => directory;
-    "${go_home}/cruise-config.xml":
+      ensure => directory,
+      mode => 0770;
+  "${go_home}/cruise-config.xml":
       ensure => present,
       source => 'puppet:///modules/go/sample-cruise-config.xml',
       require => Exec['install_go_server'],
